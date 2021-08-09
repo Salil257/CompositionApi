@@ -33,7 +33,6 @@ public interface CompositionIngredientsRepository extends JpaRepository<Composit
             "   inner join molecule on molecule_ingredient.molecule_id=mol_ing.molecule_id\n" +
             "   where (molecule_ingredient.ingredient_id=?1 and strength=?2 and unit=?3 and molecule.rx_required=?4);",
             nativeQuery = true)
-    public List<Integer> findAllCompositionsByIngredientMoleculeDetails(int ingredientId, float Strength,
-                                                                        String Unit,boolean rex_required);*/
+    */
 }
 

@@ -1,8 +1,6 @@
 package com.licious.CompositionApi.Controller;
 
-import com.licious.CompositionApi.Model.Composition;
-import com.licious.CompositionApi.Model.CompositionIngredient;
-import com.licious.CompositionApi.Model.Ingredient;
+import com.licious.CompositionApi.Model.*;
 import com.licious.CompositionApi.Repository.*;
 import com.licious.CompositionApi.Service.BatchingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class RequestController {
@@ -50,37 +49,68 @@ public class RequestController {
 API2
 a composition id/name provides its ingredients with
 their corresponding strengths and units also return the molecule and its corresponding rx_required.*/
-   /* @GetMapping("/getComIng/")
+    @GetMapping("/getComIng/")
     public List<CompositionIngredient> findAllByCompositionIngredient(@RequestParam int ingredientId, @RequestParam float Strength, @RequestParam String Unit){
-        List<Integer> list = comIng.findAllByIngredientStrengthUnit(ingredientId,Strength,Unit);
-        List<CompositionIngredient> lis = new ArrayList<>();
-        for(int i =0;i<list.size();i++){
-            if(comIng.findById(list.get(i)).isPresent()){
-                CompositionIngredient coming;
-                coming = comIng.findById(list.get(i)).get();
-                lis.add(coming);
-            }
+        return comIng.findByIngredientAndStrengthAndUnit(ingredientId,Strength,Unit);
+    }
+
+
+
+    @GetMapping("/getComIng/")
+    public List<CompositionIngredient> findAllByCompositionIngredient(@RequestParam int ingredientId ,@RequestParam float Strength,@RequestParam String Unit, @RequestParam boolean rxRequired) {
+    /*List<CompositionIngredient> list = comIng.findByIngredientAndStrengthAndUnit(ingredientId,Strength,Unit);
+    List<CompositionIngredient> finallist;
+    for(int i=0;i<list.size();i++){
+
+       CompositionIngredient compositionIngredient = list.get(i);
+        Set<Ingredient> ingredientList =compositionIngredient.getIngredients();
+        for(int j=0;j<ingredientList.size();j++){
+            molIng.findMoleculeByIngredientId(ingredientList[i].getId());
         }
-        return lis;
-    } */
-   /* @GetMapping("/getComIng/")
-    public List<CompositionIngredient> findAllByCompositionIngredient(@RequestParam List<Integer> ingredientId ,@RequestParam float Strength,@RequestParam String Unit, @RequestParam boolean rxRequired){
-        List<Ingredient> ingredientList = ing.findAllById(ingredientId);
-        for(int i =0;i<ingredientList.size();i++){
-            if(in[i].){
-                CompositionIngredient coming;
-                coming = comIng.findById(list.get(i)).get();
-                lis.add(coming);
+
+       List<Molecule> molecules = molIng.findMoleculeByIngredientId(ingredientId);
+    }
+
+        List<CompositionIngredient> compositionIngredientlist = comIng.findByIngredientAndStrengthAndUnit(ingredientId, Strength, Unit);
+        // Initialise list to return :
+        List<CompositionIngredient> compositionIngredients = new ArrayList<>();
+        /*
+         * We have a compositionIngredientlist containing CompositionIngredients found using:
+         *       ingredientId
+         *
+         *       strength
+         *       unit
+         * To filter out ones with rx == rxRequired, iterate, find molecule and check for rx as follows
+         * */
+        /*for(CompositionIngredient c : compositionIngredientlist) {
+            int ingrId = c.getIngredients().getId();
+            // Get list of MoleculeIngredients
+            List<MoleculeIngredient> moleculeIngredientList = moleculeIngredientService.getMoleculeIngredientByIngredientId(ingrId);
+            // And corresponding moleculeIds
+            List<Integer> moleculeIds = new ArrayList<>();
+            for (MoleculeIngredient mi : moleculeIngredientList) {
+                moleculeIds.add(mi.getMolecule().getId());
             }
-        List<CompositionIngredient> list= findAllByCompositionIngredient(ingredientId,Strength,Unit);
-        List<CompositionIngredient> lis = new ArrayList<>();
-        for(int i =0;i<list.size();i++){
-            if(list[i].){
-                CompositionIngredient coming;
-                coming = comIng.findById(list.get(i)).get();
-                lis.add(coming);
+            // For each molecule(from moleculeIds), find rxRequired
+            List<Boolean> moleculeRxList = new ArrayList<>();
+            for (Integer i : moleculeIds){
+                moleculeRxList.add(moleculeService.getMoleculeById(i).getRxRequired());
             }
-        }
-        return lis;
-    }*/
+            //iterate through Boolean List moleculeRxList and if all values are == rxRequired, compositionIngredients.add(c);
+            int flag = 0;
+            for(Boolean rx : moleculeRxList) {
+                if(rx == rxRequired)
+                    flag = 1;
+                else
+                    flag = 0;
+            }
+            //if flag == 1 after end of above loop, means all rx values  == rxRequired
+            //therefore add the compositionIngredient to list to return
+            if (flag == 1)
+                compositionIngredients.add(c);
+        }*/
+        return null;
+    }
+
+
 }
